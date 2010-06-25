@@ -1,28 +1,8 @@
 Process Monitor
 
-A simple utility to get the process id and it status.
+A simple utility to monitor processes/service on Linux based systems.
 
-The input required are the process type i.e. ruby,java or so on and a pattern to identify the process.
-
-The pattern here could be any part of the name of the process to allow you to get an exact match of the process. 
-
-For example if you want to get the pid of all Ruby processes do this:
-
- ProcessMonitor.get_pid("ruby")
-
-will return an array of pids in case of many Ruby processes and return a single pid in case of a single Ruby process.
-
-If you want to get the status of a process
-
-  ProcessMonitor.get_process_status(pid)
-
-will return the state of the process i.e. running/sleeping etc.
-
-if you want to check if a process is up
-
-  ProcessMonitor.process_is_up?(pid)
-
-will return "true" or "false"
+Check out wiki for more information on getting started using this gem.
 
 
 
