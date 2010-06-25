@@ -1,11 +1,13 @@
 class ProcessMonitor
-  
+
   ##
   # This method fetches the process ids of the process matching the process_type and
   # process_pattern
   # This method returns an array of hash as [{:process => {:pid => pid,:command => "Command to invoke the process",:status => "Status of the process"},...]
 
   def self.get_pid(process_type,process_pattern="",get_status=true)
+    return [] if  process_type.nil? || process_type.empty?
+
     # Parse the output to fetch the process id.
     process_id_reg_exp = %r{^(.*)\s*}
 
@@ -20,16 +22,18 @@ class ProcessMonitor
         process_id_reg_exp.match(process_line)
         pid  = $1.gsub(/\s*/, "").to_i
         unless $$ == pid
-          pid_command = `cat /proc/#{pid}/cmdline`
-          if get_status
-            pids << {:process => {:pid => pid, :command => pid_command, :status => get_process_status(pid)}}
-          else
-            pids << {:process => {:pid => pid, :command => pid_command}}
+          if process_is_up?(pid)
+            pid_command = `cat /proc/#{pid}/cmdline`
+            if get_status
+              pids << {:process => {:pid => pid, :command => pid_command, :status => get_process_status(pid)}}
+            else
+              pids << {:process => {:pid => pid, :command => pid_command}}
+            end
           end
         end
       end
     end
-    
+
     pids
   rescue => e
     "Exception occurred. Exception => #{e.inspect}. Backtrace => #{e.backtrace} "
@@ -52,7 +56,7 @@ class ProcessMonitor
     "Exception occurred. Details => #{e}"
   end
 
-  
+
   ##
   # Fetch the IO details of the process
 
@@ -97,7 +101,7 @@ class ProcessMonitor
     "Exception occurred. Details => #{e}"
   end
 
-  
+
   ##
   # Fetch the limits of the process.
 
